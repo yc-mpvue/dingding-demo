@@ -23,6 +23,7 @@
     "build": "node build/build.js my"
   },
   "dependencies": {
+    "@antv/my-f2": "^1.1.6",
     "mpvue": "^2.0.0",
     "vuex": "^3.0.1"
   },
