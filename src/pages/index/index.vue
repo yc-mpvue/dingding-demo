@@ -1,28 +1,26 @@
 <template>
   <div class="test">
     <div class="laber">npm install @antv/my-f2</div>
-    <canvas
-      id="area"
+    <canvas id="area"
       @TouchStart="touchStart"
       @TouchMove="touchMove"
       @TouchEnd="touchEnd"
       :width="width"
-      :height="height"
-    />
+      :height="height" />
   </div>
 </template>
 
 <script>
 import F2 from "@antv/my-f2";
 export default {
-  data() {
+  data () {
     return {
-      width: 233,
-      height: 233,
+      width: 750,
+      height: 500,
       // canvas: ""
     };
   },
-  onReady() {
+  onReady () {
     my
       .createSelectorQuery()
       .select("#area")
@@ -31,28 +29,31 @@ export default {
         // 获取分辨率
         const pixelRatio = my.getSystemInfoSync().pixelRatio;
         // 获取画布实际宽高
-        const canvasWidth = res[0].width;
-        const canvasHeight = res[0].height;
+        // 必要！按照设置的分辨率进行放大
+        const myCtx = my.createCanvasContext("area");
+
+        const canvas = new F2.Renderer(myCtx);
+        // console.log('canvas*******', canvas)
+        //console.log(res[0].width, res[0].height);
+        this.drawChart(canvas, res[0].width, res[0].height);
+        const canvasWidth = res[0].width * pixelRatio;
+        const canvasHeight = res[0].height * pixelRatio;
         // 高清解决方案
         // this.setData({
         //   width: canvasWidth * pixelRatio,
         //   height: canvasHeight * pixelRatio
         // });
-        console.log('*******', canvasWidth, canvasHeight, pixelRatio)
-        this.width = canvasWidth * pixelRatio/2.1
-        this.height = canvasHeight * pixelRatio/2.1
-        console.log('*******', this.width, this.height, pixelRatio)
-        const myCtx = my.createCanvasContext("area");
-        myCtx.scale(pixelRatio, pixelRatio); // 必要！按照设置的分辨率进行放大
-        const canvas = new F2.Renderer(myCtx);
-        this.canvas = canvas;
-        console.log('canvas*******', canvas)
-        //console.log(res[0].width, res[0].height);
-        this.drawChart(canvas, res[0].width, res[0].height);
+        // console.log('*******', canvasWidth, canvasHeight, pixelRatio)
+        this.width = canvasWidth
+        this.height = canvasHeight
+        // console.log('*******', this.width, this.height, pixelRatio)
+        console.log('bbbb', myCtx);
+        console.log('aaaa', myCtx.scale);
+        myCtx.scale(pixelRatio, pixelRatio);
       });
   },
   methods: {
-    drawChart(canvas, width, height) {
+    drawChart (canvas, width, height) {
       const data = [
         { value: 63.4, city: "New York", date: "2011-10-01" },
         { value: 62.7, city: "Alaska", date: "2011-10-01" },
@@ -83,7 +84,7 @@ export default {
         }
       });
       chart.axis("date", {
-        label(text, index, total) {
+        label (text, index, total) {
           const textCfg = {};
           if (index === 0) {
             textCfg.textAlign = "left";
@@ -108,17 +109,17 @@ export default {
       return chart;
     },
 
-    touchStart(e) {
+    touchStart (e) {
       if (this.canvas) {
         this.canvas.emitEvent("touchstart", [e]);
       }
     },
-    touchMove(e) {
+    touchMove (e) {
       if (this.canvas) {
         this.canvas.emitEvent("touchmove", [e]);
       }
     },
-    touchEnd(e) {
+    touchEnd (e) {
       if (this.canvas) {
         this.canvas.emitEvent("touchend", [e]);
       }
